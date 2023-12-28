@@ -3,6 +3,18 @@ import AlertMsg from "./AlertMsg";
 
 const UploadForm: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
+  const [errorMsg, setErrorMsg] = useState<String | null>(null);
+
+  const onFileSelect = (file: File) => {
+    console.log(file);
+    if (file && file.size > 2000000) {
+      console.log("Size is Greater than 2 MB");
+      setErrorMsg("Maximum File Upload Size is 2MB");
+      return;
+    }
+    setErrorMsg(null);
+    setFile(file);
+  };
 
   return (
     <div className='text-center'>
@@ -32,14 +44,23 @@ const UploadForm: React.FC = () => {
               or <strong>drag</strong> and <strong>drop</strong>
             </p>
             <p className='text-xs text-gray-500 dark:text-gray-400'>
-              SVG, PNG, JPG or GIF (MAX. 800x400px)
+              SVG, PNG, JPG or GIF (MAX Size : 2MB)
             </p>
           </div>
-          <input id='dropzone-file' type='file' className='hidden' />
+          <input
+            id='dropzone-file'
+            type='file'
+            className='hidden'
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              onFileSelect(e.target.files?.[0]!)
+            }
+          />
         </label>
       </div>
+      {errorMsg ? <AlertMsg msg={errorMsg as string} /> : null}
+
       <button
-        disabled
+        disabled={!file}
         className='p-2 bg-primary text-white w-[30%] rounded-full mt-5 disabled:bg-gray-400'
       >
         Upload
