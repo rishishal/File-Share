@@ -1,7 +1,6 @@
 "use client";
 import { UserButton } from "@clerk/nextjs";
 import { AlignJustify, X } from "lucide-react";
-import Image from "next/image";
 import { useState } from "react";
 import { menuList } from "./NavData";
 import Link from "next/link";
