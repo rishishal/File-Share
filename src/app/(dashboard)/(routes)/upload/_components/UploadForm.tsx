@@ -1,5 +1,6 @@
 import { useState } from "react";
 import AlertMsg from "./AlertMsg";
+import FilePreview from "./FilePreview";
 
 const UploadForm: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -58,6 +59,10 @@ const UploadForm: React.FC = () => {
         </label>
       </div>
       {errorMsg ? <AlertMsg msg={errorMsg as string} /> : null}
+
+      {file ? (
+        <FilePreview file={file} removeFile={() => setFile(null)} />
+      ) : null}
 
       <button
         disabled={!file}
