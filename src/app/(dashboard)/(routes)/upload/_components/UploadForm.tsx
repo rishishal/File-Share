@@ -1,11 +1,16 @@
 import { useState } from "react";
 import AlertMsg from "./AlertMsg";
 import FilePreview from "./FilePreview";
+import ProgressBar from "./ProgressBar";
 interface UploadFormProps {
   uploadBtnClick: any;
+  progress: number;
 }
 
-const UploadForm: React.FC<UploadFormProps> = ({ uploadBtnClick }) => {
+const UploadForm: React.FC<UploadFormProps> = ({
+  uploadBtnClick,
+  progress,
+}) => {
   const [file, setFile] = useState<File | null>(null);
   const [errorMsg, setErrorMsg] = useState<String | null>(null);
 
@@ -67,13 +72,17 @@ const UploadForm: React.FC<UploadFormProps> = ({ uploadBtnClick }) => {
         <FilePreview file={file} removeFile={() => setFile(null)} />
       ) : null}
 
-      <button
-        disabled={!file}
-        className='p-2 bg-primary text-white w-[30%] rounded-full mt-5 disabled:bg-gray-400'
-        onClick={() => uploadBtnClick(file)}
-      >
-        Upload
-      </button>
+      {progress > 0 ? (
+        <ProgressBar progress={progress!} />
+      ) : (
+        <button
+          disabled={!file}
+          className='p-2 bg-primary text-white w-[30%] rounded-full mt-5 disabled:bg-gray-400'
+          onClick={() => uploadBtnClick(file)}
+        >
+          Upload
+        </button>
+      )}
     </div>
   );
 };
