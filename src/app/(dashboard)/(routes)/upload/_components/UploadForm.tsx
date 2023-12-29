@@ -1,8 +1,11 @@
 import { useState } from "react";
 import AlertMsg from "./AlertMsg";
 import FilePreview from "./FilePreview";
+interface UploadFormProps {
+  uploadBtnClick: any;
+}
 
-const UploadForm: React.FC = () => {
+const UploadForm: React.FC<UploadFormProps> = ({ uploadBtnClick }) => {
   const [file, setFile] = useState<File | null>(null);
   const [errorMsg, setErrorMsg] = useState<String | null>(null);
 
@@ -67,6 +70,7 @@ const UploadForm: React.FC = () => {
       <button
         disabled={!file}
         className='p-2 bg-primary text-white w-[30%] rounded-full mt-5 disabled:bg-gray-400'
+        onClick={() => uploadBtnClick(file)}
       >
         Upload
       </button>
