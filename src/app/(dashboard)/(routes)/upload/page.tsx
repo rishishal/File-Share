@@ -8,6 +8,7 @@ import {
 import UploadForm from "./_components/UploadForm";
 import { app } from "@/firebaseConfig";
 import { useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 
 const Upload = () => {
   const [progress, setProgress] = useState<number | null>();
@@ -29,6 +30,8 @@ const Upload = () => {
       progress == 100 &&
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           console.log("File available at", downloadURL);
+
+          toast.success("File upload completed!");
         });
     });
   };
@@ -44,6 +47,7 @@ const Upload = () => {
         uploadBtnClick={(file: File) => uploadFile(file)}
         progress={progress!}
       />
+      <Toaster position='top-right' reverseOrder={false} />
     </div>
   );
 };

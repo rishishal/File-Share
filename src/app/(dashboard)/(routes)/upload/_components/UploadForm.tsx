@@ -2,6 +2,7 @@ import { useState } from "react";
 import AlertMsg from "./AlertMsg";
 import FilePreview from "./FilePreview";
 import ProgressBar from "./ProgressBar";
+import toast, { Toaster } from "react-hot-toast";
 interface UploadFormProps {
   uploadBtnClick: any;
   progress: number;
