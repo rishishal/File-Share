@@ -18,6 +18,7 @@ const TopHeader = () => {
         <Link href='#' className='menu-bars md:hidden'>
           <AlignJustify onClick={showSidebar} />
         </Link>
+        <UserButton />
       </div>
       <nav className={sidebar ? "nav-menu active" : "nav-menu"}>
         <ul className='nav-menu-items' onClick={showSidebar}>
