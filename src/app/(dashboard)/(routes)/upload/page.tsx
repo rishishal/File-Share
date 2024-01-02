@@ -12,11 +12,15 @@ import toast, { Toaster } from "react-hot-toast";
 import { getFirestore, doc, setDoc } from "firebase/firestore";
 import { useUser } from "@clerk/nextjs";
 import { v4 as uuidv4 } from "uuid";
+import { useRouter } from "next/navigation";
+import CompleteMark from "./_components/CompleteMark";
 
 const Upload = () => {
   const { user } = useUser();
   const [progress, setProgress] = useState<number | null>();
-  const [uploadComleted, setUploadCompleted] = useState<boolean>(false);
+  const [uploadCompleted, setUploadCompleted] = useState<boolean>(false);
+  const [fileDocId, setFileDocId] = useState<string>();
+  const router = useRouter();
   const storage = getStorage(app);
   const db = getFirestore(app);
 
@@ -37,7 +41,6 @@ const Upload = () => {
       progress == 100 &&
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           console.log("File available at", downloadURL);
-
           toast.success("File upload completed!");
           saveInfo(file, downloadURL);
         });
@@ -59,27 +62,43 @@ const Upload = () => {
       password: "",
       shortUrl: process.env.NEXT_PUBLIC_BASE_URL + docId,
     });
+    setFileDocId(docId);
   };
 
-  // useEffect(() => {
-  //   uploadComleted &&
-  //     setTimeout(() => {
-  //       setUploadCompleted(false);
-  //       window.location.reload();
-  //     }, 2000);
-  // }, [uploadComleted]);
+  useEffect(() => {
+    console.log("Trigger");
+
+    progress === 100 &&
+      setTimeout(() => {
+        setUploadCompleted(true);
+      }, 2000);
+  }, [progress]);
+
+  useEffect(() => {
+    uploadCompleted &&
+      setTimeout(() => {
+        router.push("/file-preview/" + fileDocId);
+        setUploadCompleted(false);
+      }, 2500);
+  }, [fileDocId, router, uploadCompleted]);
 
   return (
     <div className='p-5 px-8 md:px28'>
-      <h2 className='text-[20px] text-center m-5'>
-        Start <strong className='text-primary'> Uploading</strong> File and
-        <strong className='text-primary'> Share </strong>
-        it
-      </h2>
-      <UploadForm
-        uploadBtnClick={(file: File) => uploadFile(file)}
-        progress={progress!}
-      />
+      {!uploadCompleted ? (
+        <div>
+          <h2 className='text-[20px] text-center m-5'>
+            Start <strong className='text-primary'> Uploading</strong> File and
+            <strong className='text-primary'> Share </strong> it
+          </h2>
+          <UploadForm
+            uploadBtnClick={(file: File) => uploadFile(file)}
+            progress={progress!}
+          />
+        </div>
+      ) : (
+        <CompleteMark />
+      )}
+
       <Toaster position='top-right' reverseOrder={false} />
     </div>
   );
