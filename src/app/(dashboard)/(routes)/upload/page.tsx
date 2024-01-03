@@ -77,8 +77,8 @@ const Upload = () => {
   useEffect(() => {
     uploadCompleted &&
       setTimeout(() => {
-        router.push("/file-preview/" + fileDocId);
         setUploadCompleted(false);
+        router.push("/file-preview/" + fileDocId);
       }, 2500);
   }, [fileDocId, router, uploadCompleted]);
 
