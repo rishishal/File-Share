@@ -21,7 +21,7 @@ const FileInfo = ({ file }: { file: File }) => {
         />
         <div>
           <h2>{file.filename}</h2>
-          <h2 className='text-gray-400 text-[13px]'>{file.filename}</h2>
+          <h2 className='text-gray-400 text-[13px]'>{file.fileSize}</h2>
         </div>
       </div>
     )

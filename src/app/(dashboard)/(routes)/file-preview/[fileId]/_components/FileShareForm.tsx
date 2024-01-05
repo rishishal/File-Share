@@ -1,9 +1,13 @@
-import { Copy, CopyIcon } from "lucide-react";
+import { Copy } from "lucide-react";
 import { useState } from "react";
 import { File } from "@/utils/Interface";
+import GlobalApi from "@/utils/GlobalApi";
+import { useUser } from "@clerk/nextjs";
+import { SendEmailProps } from "@/utils/Interface";
 interface FileShareFormProps {
   file: File;
   onPasswordSave: (password: string) => void;
+  data: SendEmailProps;
 }
 
 const FileShareForm: React.FC<FileShareFormProps> = ({
@@ -12,6 +16,26 @@ const FileShareForm: React.FC<FileShareFormProps> = ({
 }) => {
   const [isPasswordEnable, setIsEnablePassword] = useState<boolean>(false);
   const [password, setPassword] = useState<string>("");
+  const [email, setEmail] = useState<string | null>();
+  const { user } = useUser();
+
+  const sendEmail = () => {
+    const data: SendEmailProps["data"] = {
+      emailToSend: email || "", // Assuming email can be null or undefined
+      userName: user?.fullName || "", // Assuming fullName can be null or undefined
+      fileName: file.filename,
+      fileSize: file.fileSize,
+      fileType: file.fileType,
+      shortUrl: file.shortUrl,
+    };
+
+    const sendEmailProps: SendEmailProps = { data };
+
+    GlobalApi.SendEmail(sendEmailProps).then((response) => {
+      console.log(response);
+    });
+  };
+
   return (
     file && (
       <div className='flex flex-col gap-2'>
@@ -61,7 +85,10 @@ const FileShareForm: React.FC<FileShareFormProps> = ({
               className='bg-transparent outline-none'
             />
           </div>
-          <button className='p-2 disabled:bg-gray-300 bg-primary text-white hover:bg-blue-600 w-full mt-2 rounded-md'>
+          <button
+            className='p-2 disabled:bg-gray-300 bg-primary text-white hover:bg-blue-600 w-full mt-2 rounded-md'
+            onClick={() => sendEmail()}
+          >
             Send Email
           </button>
         </div>
