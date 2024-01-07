@@ -66,7 +66,7 @@ const EmailTemplate = ({
               href='https://rishikumar-portfolio.netlify.app/'
               style={reportLink}
             >
-              Rishi Kumar &#169 2024
+              Rishi Kumar Ⓒ 2024
             </Link>
           </Container>
         </Body>
