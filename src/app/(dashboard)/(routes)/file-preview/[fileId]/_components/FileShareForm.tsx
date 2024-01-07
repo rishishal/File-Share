@@ -4,10 +4,11 @@ import { File } from "@/utils/Interface";
 import GlobalApi from "@/utils/GlobalApi";
 import { useUser } from "@clerk/nextjs";
 import { SendEmailProps } from "@/utils/Interface";
+import toast, { Toaster } from "react-hot-toast";
+
 interface FileShareFormProps {
   file: File;
   onPasswordSave: (password: string) => void;
-  data: SendEmailProps;
 }
 
 const FileShareForm: React.FC<FileShareFormProps> = ({
@@ -17,6 +18,7 @@ const FileShareForm: React.FC<FileShareFormProps> = ({
   const [isPasswordEnable, setIsEnablePassword] = useState<boolean>(false);
   const [password, setPassword] = useState<string>("");
   const [email, setEmail] = useState<string | null>();
+  // const [toast, setToast] = useState<string>();
   const { user } = useUser();
 
   const sendEmail = () => {
@@ -36,6 +38,21 @@ const FileShareForm: React.FC<FileShareFormProps> = ({
     });
   };
 
+  const onCopyClick = () => {
+    navigator.clipboard.writeText(file.shortUrl);
+    toast.success("Copied", {
+      style: {
+        border: "1px solid #713200",
+        padding: "16px",
+        color: "#713200",
+      },
+      iconTheme: {
+        primary: "#713200",
+        secondary: "#FFFAEE",
+      },
+    });
+  };
+
   return (
     file && (
       <div className='flex flex-col gap-2'>
@@ -50,7 +67,11 @@ const FileShareForm: React.FC<FileShareFormProps> = ({
               disabled
               className='disabled:text-gray-500 bg-transparent outline-none w-full'
             />
-            <Copy className='text-gray-400 hover:text-gray-600 cursor-pointer' />
+            <Copy
+              className='text-gray-400 hover:text-gray-600 cursor-pointer'
+              onClick={() => onCopyClick()}
+            />
+            <Toaster position='top-right' reverseOrder={true} />
           </div>
         </div>
         <div className='gap-3 flex mt-5'>
@@ -78,11 +99,11 @@ const FileShareForm: React.FC<FileShareFormProps> = ({
         ) : null}
         <div className='border rounded-md p-3 mt-5'>
           <label className='text-[14px] text-gray-500'>Send Email</label>
-          <div className='border rounded-md w-full md:w-full p-2'>
+          <div className='border rounded-md w-full p-2'>
             <input
               type='email'
               placeholder='example@gmail.com'
-              className='bg-transparent outline-none'
+              className='bg-transparent outline-none w-full'
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>

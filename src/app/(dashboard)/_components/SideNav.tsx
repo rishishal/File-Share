@@ -15,6 +15,7 @@ const SideNav = () => {
         {menuList.map((item, index) => (
           <Link href={item.path} key={index}>
             <button
+              key={index}
               className={`flex gap-2 p-4 px-6 hover:bg-gray-100 w-full
              text-gray-500
              ${activeIndex == index ? "bg-blue-50 text-primary" : null}`}
