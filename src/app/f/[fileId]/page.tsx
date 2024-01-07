@@ -21,6 +21,7 @@ const FileView: React.FC<FilePreProps> = ({ params }) => {
   useEffect(() => {
     console.log(id);
     id && getFileInfo();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const getFileInfo = async () => {

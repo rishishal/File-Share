@@ -1,5 +1,5 @@
 import { Copy } from "lucide-react";
-import { useState } from "react";
+import { useState, ChangeEvent } from "react";
 import { File } from "@/utils/Interface";
 import GlobalApi from "@/utils/GlobalApi";
 import { useUser } from "@clerk/nextjs";
@@ -18,8 +18,16 @@ const FileShareForm: React.FC<FileShareFormProps> = ({
   const [isPasswordEnable, setIsEnablePassword] = useState<boolean>(false);
   const [password, setPassword] = useState<string>("");
   const [email, setEmail] = useState<string | null>();
-  // const [toast, setToast] = useState<string>();
   const { user } = useUser();
+
+  const handlePasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setPassword(event.target.value);
+  };
+
+  const handleSavePassword = () => {
+    onPasswordSave(password);
+    setIsEnablePassword(false);
+  };
 
   const sendEmail = () => {
     const data: SendEmailProps["data"] = {
@@ -75,7 +83,11 @@ const FileShareForm: React.FC<FileShareFormProps> = ({
           </div>
         </div>
         <div className='gap-3 flex mt-5'>
-          <input type='checkbox' onChange={(e) => setIsEnablePassword(true)} />
+          <input
+            type='checkbox'
+            checked={isPasswordEnable}
+            onChange={() => setIsEnablePassword(!isPasswordEnable)}
+          />
           <label>Enable Password?</label>
         </div>
 
@@ -85,13 +97,16 @@ const FileShareForm: React.FC<FileShareFormProps> = ({
               <input
                 type='password'
                 className='disabled:text-gray-500 bg-transparent outline-none'
-                onChange={(e) => setPassword(e.target.value)}
+                // onChange={(e) => setPassword(e.target.value)}
+
+                value={password}
+                onChange={handlePasswordChange}
               />
             </div>
             <button
               className='p-2 bg-primary text-white rounded-md disabled:bg-gray-300 hover:bg-blue-600'
               disabled={password?.length < 3}
-              onClick={() => onPasswordSave(password)}
+              onClick={handleSavePassword}
             >
               Save
             </button>
