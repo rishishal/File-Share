@@ -14,12 +14,12 @@ interface FilePreProps {
 
 const FileView: React.FC<FilePreProps> = ({ params }) => {
   const db = getFirestore(app);
+
   const id = params.fileId;
 
   const [file, setFile] = useState<File | null>();
 
   useEffect(() => {
-    console.log(id);
     id && getFileInfo();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
@@ -29,7 +29,7 @@ const FileView: React.FC<FilePreProps> = ({ params }) => {
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-      console.log("Document data:", docSnap.data());
+      // console.log("Document data:", docSnap.data());
       setFile(docSnap.data() as File);
     } else {
       // docSnap.data() will be undefined in this case

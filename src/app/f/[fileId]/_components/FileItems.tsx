@@ -1,14 +1,39 @@
+"use client";
 import { Download } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import { File } from "@/utils/Interface";
+import { getDownloadURL, getStorage, ref } from "firebase/storage";
+import { ReactElement } from "react";
 
 interface fileItemProps {
   file: File;
 }
 
-const FileItems: React.FC<fileItemProps> = ({ file }) => {
+const FileItems: React.FC<fileItemProps> = ({ file }): ReactElement => {
   const [password, setPassword] = useState<string | null>();
+
+  const storage = getStorage();
+  const handleDownload = async () => {
+    try {
+      if (file) {
+        const storageRef = ref(
+          storage,
+          `gs://file-sharing-7641a.appspot.com/file-upload/${file.filename}`
+        );
+        const downloadURL = await getDownloadURL(storageRef);
+
+        // Create a link and trigger the download
+        const link = document.createElement("a");
+        link.href = downloadURL;
+        link.target = "_blank"; // Open in a new tab
+        link.download = file.filename; // Set the download filename
+        link.click();
+      }
+    } catch (error: any) {
+      console.error("Error downloading file:", error.message);
+    }
+  };
 
   return (
     file && (
@@ -45,6 +70,7 @@ const FileItems: React.FC<fileItemProps> = ({ file }) => {
           <button
             className='flex gap-2 p-2 bg-primary text-white rounded-full w-full items-center hover:bg-blue-600 text-[14px] mt-5 text-center justify-center disabled:bg-gray-300'
             disabled={file.password !== password}
+            onClick={handleDownload}
           >
             <Download className='h-4 w-4' />
             Download
